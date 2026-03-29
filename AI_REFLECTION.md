@@ -1,7 +1,7 @@
 
 ### 2. AI_REFLECTION.md
 
-```markdown
+
 # AI Usage Reflection for LocoBike Ride API
 This document details the AI tools used, prompts, AI-generated weaknesses, and manual improvements for the project, as required by the take-home test.
 
