@@ -6,24 +6,24 @@ from models import Ride, create_tables
 from schemas import RideStartRequest, RideEndRequest, RideResponse, RideCostResponse
 from services import start_ride, end_ride, get_ride_by_id, calculate_ride_cost
 
-# 初始化FastAPI
+# Initialize FastAPI
 app = FastAPI(
     title="LocoBike Ride Service API",
     description="Backend API for LocoBike ride service (start/end ride, cost calculation)",
     version="1.0.0"
 )
 
-# 初始化SQLite数据库
+# Initialize the SQLite database
 SQLALCHEMY_DATABASE_URL = "sqlite:///./locobike.db"
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}  # SQLite专属配置
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}  # Exclusive configuration for SQLite
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# 创建数据库表（首次运行自动创建）
+# Create a database table (automatically created on the first run)
 create_tables(engine)
 
-# 依赖项：获取数据库会话
+# Dependencies: Obtain a database session
 def get_db():
     db = SessionLocal()
     try:
@@ -31,7 +31,7 @@ def get_db():
     finally:
         db.close()
 
-# 1. POST /ride/start - 开始骑行
+# 1. POST /ride/start - Start cycling
 @app.post("/ride/start", response_model=RideResponse, status_code=201)
 def api_start_ride(db: Session = Depends(get_db)):
     try:
@@ -40,7 +40,7 @@ def api_start_ride(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# 2. POST /ride/end - 结束骑行
+# 2. POST /ride/end - End the cycling
 @app.post("/ride/end", response_model=RideResponse)
 def api_end_ride(request: RideEndRequest, db: Session = Depends(get_db)):
     try:
@@ -51,7 +51,7 @@ def api_end_ride(request: RideEndRequest, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# 3. GET /ride/{id} - 获取骑行详情
+# 3. GET /ride/{id} - Get cycling details
 @app.get("/ride/{id}", response_model=RideResponse)
 def api_get_ride(id: int, db: Session = Depends(get_db)):
     try:
@@ -62,7 +62,7 @@ def api_get_ride(id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# 4. GET /ride/{id}/cost - 获取骑行费用
+# 4. GET /ride/{id}/cost - Get the cycling cost
 @app.get("/ride/{id}/cost", response_model=RideCostResponse)
 def api_get_ride_cost(id: int, db: Session = Depends(get_db)):
     try:
@@ -77,7 +77,7 @@ def api_get_ride_cost(id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# 根路径健康检查
+# Root path health check
 @app.get("/")
 def health_check():
     return {"status": "healthy", "service": "LocoBike Ride API"}
