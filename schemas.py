@@ -2,15 +2,15 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
-# 骑行开始请求（无参数，仅创建会话）
+# Ride start request (no parameters, only create a session)
 class RideStartRequest(BaseModel):
     pass
 
-# 骑行结束请求（必传ride_id）
+# Ride end request (ride_id must be passed)
 class RideEndRequest(BaseModel):
-    ride_id: int = Field(..., gt=0, description="骑行ID，必须为正整数")
+    ride_id: int = Field(..., gt=0, description="Cycling ID must be a positive integer")
 
-# 骑行详情响应模型
+# Riding details response model
 class RideResponse(BaseModel):
     id: int
     start_time: datetime
@@ -20,13 +20,13 @@ class RideResponse(BaseModel):
     is_completed: bool
 
     class Config:
-        orm_mode = True  # 支持从SQLAlchemy ORM对象转换
+        orm_mode = True  # Support conversion from SQLAlchemy ORM objects
 
-# 骑行费用响应模型
+# Ride cost response model
 class RideCostResponse(BaseModel):
     ride_id: int
     unlock_fee: float
     ride_duration_min: Optional[float]
     additional_fee: float
     total_cost: float
-    daily_cap_applied: bool  # 是否触发每日上限$25
+    daily_cap_applied: bool  # Whether the daily limit of $25 is triggered
